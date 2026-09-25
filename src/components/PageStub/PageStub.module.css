@@ -1,0 +1,18 @@
+.pageStub {
+  min-height: 480px;
+  padding: 24px;
+  border-radius: 16px;
+  background-color: #fff;
+  box-shadow: 0 2px 12px rgba(20, 30, 60, 0.06);
+  box-sizing: border-box;
+}
+
+.title {
+  margin-bottom: 8px;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.text {
+  color: #8a94a6;
+}

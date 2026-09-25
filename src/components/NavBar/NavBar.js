@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { NavLink } from "react-router-dom";
 import styles from "./NavBar.module.css";
 
 const icons = {
@@ -61,35 +61,32 @@ const icons = {
 };
 
 const menu = [
-  { id: "feed", label: "Лента" },
-  { id: "profile", label: "Профиль" },
-  { id: "friends", label: "Друзья", count: 12 },
-  { id: "groups", label: "Группы" },
-  { id: "messages", label: "Сообщения", count: 3 },
-  { id: "events", label: "События" },
-  { id: "marketplace", label: "Маркетплейс" },
-  { id: "saved", label: "Сохранённое" },
-  { id: "settings", label: "Настройки" },
+  { id: "feed", path: "/", label: "Лента" },
+  { id: "profile", path: "/profile", label: "Профиль" },
+  { id: "friends", path: "/friends", label: "Друзья", count: 12 },
+  { id: "groups", path: "/groups", label: "Группы" },
+  { id: "messages", path: "/messages", label: "Сообщения", count: 3 },
+  { id: "events", path: "/events", label: "События" },
+  { id: "marketplace", path: "/marketplace", label: "Маркетплейс" },
+  { id: "saved", path: "/saved", label: "Сохранённое" },
+  { id: "settings", path: "/settings", label: "Настройки" },
 ];
 
 const NavBar = () => {
-  const [active, setActive] = useState("profile");
-
   return (
     <nav className={styles.navBar} aria-label="Основное меню">
       <ul className={styles.list}>
-        {menu.map(({ id, label, count }) => (
+        {menu.map(({ id, path, label, count }) => (
           <li key={id}>
-            <button
-              type="button"
-              className={`${styles.item} ${active === id ? styles.active : ""}`}
-              aria-current={active === id ? "page" : undefined}
-              onClick={() => setActive(id)}
+            <NavLink
+              to={path}
+              end={path === "/"}
+              className={({ isActive }) => `${styles.item} ${isActive ? styles.active : ""}`}
             >
               <span className={styles.icon}>{icons[id]}</span>
               <span className={styles.label}>{label}</span>
               {count > 0 && <span className={styles.count}>{count}</span>}
-            </button>
+            </NavLink>
           </li>
         ))}
       </ul>

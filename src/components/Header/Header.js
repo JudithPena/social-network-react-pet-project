@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import styles from "./Header.module.css";
 
 const icons = {
@@ -38,9 +39,10 @@ const icons = {
   ),
 };
 
+// Actions with a path lead to a page, the rest will open popups later
 const actions = [
-  { id: "home", label: "Главная", count: 0 },
-  { id: "messages", label: "Сообщения", count: 3 },
+  { id: "home", path: "/", label: "Главная", count: 0 },
+  { id: "messages", path: "/messages", label: "Сообщения", count: 3 },
   { id: "notifications", label: "Уведомления", count: 5 },
   { id: "cart", label: "Корзина", count: 0 },
 ];
@@ -48,10 +50,10 @@ const actions = [
 const Header = () => {
   return (
     <header className={styles.header}>
-      <a className={styles.logo} href="/">
+      <Link className={styles.logo} to="/">
         <span className={styles.logoIcon}>{icons.logo}</span>
         <span className={styles.logoText}>CircleHub</span>
-      </a>
+      </Link>
 
       <form className={styles.search} role="search" onSubmit={(e) => e.preventDefault()}>
         <span className={styles.searchIcon}>{icons.search}</span>
@@ -64,20 +66,31 @@ const Header = () => {
       </form>
 
       <nav className={styles.actions}>
-        {actions.map(({ id, label, count }) => (
-          <button key={id} className={styles.actionButton} type="button" aria-label={label}>
-            {icons[id]}
-            {count > 0 && <span className={styles.badge}>{count}</span>}
-          </button>
-        ))}
+        {actions.map(({ id, path, label, count }) => {
+          const content = (
+            <>
+              {icons[id]}
+              {count > 0 && <span className={styles.badge}>{count}</span>}
+            </>
+          );
+          return path ? (
+            <Link key={id} className={styles.actionButton} to={path} aria-label={label}>
+              {content}
+            </Link>
+          ) : (
+            <button key={id} className={styles.actionButton} type="button" aria-label={label}>
+              {content}
+            </button>
+          );
+        })}
 
-        <button className={styles.profile} type="button" aria-label="Профиль">
+        <Link className={styles.profile} to="/profile" aria-label="Профиль">
           <span className={styles.avatar}>JP</span>
           <span className={styles.profileInfo}>
             <span className={styles.profileName}>Judith Pena</span>
             <span className={styles.profileRole}>@judithpena</span>
           </span>
-        </button>
+        </Link>
       </nav>
     </header>
   );

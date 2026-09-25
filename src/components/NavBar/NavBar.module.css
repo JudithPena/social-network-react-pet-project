@@ -24,12 +24,11 @@
   border: none;
   border-radius: 12px;
   background: none;
-  font: inherit;
+  box-sizing: border-box;
   font-size: 15px;
   font-weight: 500;
   color: #4a5568;
-  text-align: left;
-  cursor: pointer;
+  text-decoration: none;
   transition: background-color 0.2s, color 0.2s;
 }
 
