@@ -14,37 +14,6 @@ export const currentUser = {
   ],
 };
 
-export const posts = [
-  {
-    id: 3,
-    author: currentUser.name,
-    time: "2 часа назад",
-    text: "Наконец-то доделала шапку и меню для своего пет-проекта. Следующий шаг — лента постов!",
-    likes: 24,
-    comments: 5,
-    shares: 1,
-  },
-  {
-    id: 2,
-    author: currentUser.name,
-    time: "вчера",
-    text: "Выходные на побережье. Лучший способ перезагрузиться перед новым спринтом.",
-    image: "sunset",
-    likes: 87,
-    comments: 12,
-    shares: 3,
-  },
-  {
-    id: 1,
-    author: currentUser.name,
-    time: "3 дня назад",
-    text: "Кто может посоветовать хорошие материалы по React Router? Делюсь своими в комментариях.",
-    likes: 15,
-    comments: 9,
-    shares: 0,
-  },
-];
-
 export const friends = [
   { id: 1, name: "Alex Morgan", mutual: 12 },
   { id: 2, name: "Maria Lopez", mutual: 8 },

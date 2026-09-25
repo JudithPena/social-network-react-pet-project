@@ -1,0 +1,80 @@
+import { currentUser } from "./profile";
+
+// Newest first
+export const posts = [
+  {
+    id: 7,
+    author: "Maria Lopez",
+    time: "35 минут назад",
+    text: "Сегодня запустили новую версию нашего приложения! Спасибо всей команде за эти три месяца 🚀",
+    likes: 142,
+    comments: 23,
+    shares: 8,
+  },
+  {
+    id: 6,
+    author: currentUser.name,
+    time: "2 часа назад",
+    text: "Наконец-то доделала шапку и меню для своего пет-проекта. Следующий шаг — лента постов!",
+    likes: 24,
+    comments: 5,
+    shares: 1,
+  },
+  {
+    id: 5,
+    author: "Daniel Kim",
+    time: "5 часов назад",
+    text: "Утренняя пробежка в парке. Осень в этом году особенно красивая.",
+    image: "forest",
+    likes: 64,
+    comments: 7,
+    shares: 2,
+  },
+  {
+    id: 4,
+    author: "Alex Morgan",
+    time: "вчера",
+    text: "Ищу в команду junior frontend-разработчика: React, TypeScript, желание учиться. Пишите в личку!",
+    likes: 38,
+    comments: 16,
+    shares: 11,
+  },
+  {
+    id: 3,
+    author: currentUser.name,
+    time: "вчера",
+    text: "Выходные на побережье. Лучший способ перезагрузиться перед новым спринтом.",
+    image: "sunset",
+    likes: 87,
+    comments: 12,
+    shares: 3,
+  },
+  {
+    id: 2,
+    author: "Sofia Rossi",
+    time: "2 дня назад",
+    text: "Вечерний город из окна офиса. Иногда стоит задержаться на работе ради такого вида.",
+    image: "city",
+    likes: 211,
+    comments: 19,
+    shares: 5,
+  },
+  {
+    id: 1,
+    author: currentUser.name,
+    time: "3 дня назад",
+    text: "Кто может посоветовать хорошие материалы по React Router? Делюсь своими в комментариях.",
+    likes: 15,
+    comments: 9,
+    shares: 0,
+  },
+];
+
+export const stories = [
+  { id: 1, author: "Maria Lopez", seen: false },
+  { id: 2, author: "Daniel Kim", seen: false },
+  { id: 3, author: "Sofia Rossi", seen: false },
+  { id: 4, author: "Alex Morgan", seen: true },
+  { id: 5, author: "Liam Carter", seen: true },
+  { id: 6, author: "Emma Novak", seen: true },
+];

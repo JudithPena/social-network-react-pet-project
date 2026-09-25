@@ -85,3 +85,42 @@ describe("profile page", () => {
     expect(like).toHaveTextContent("25");
   });
 });
+
+describe("feed", () => {
+  test("shows stories and posts from friends and the user", () => {
+    renderAt("/");
+
+    expect(screen.getByRole("region", { name: "Истории" })).toBeInTheDocument();
+    expect(screen.getByText(/запустили новую версию/)).toBeInTheDocument();
+    expect(screen.getByText(/доделала шапку и меню/)).toBeInTheDocument();
+  });
+
+  test("profile shows only the user's own posts", () => {
+    renderAt("/profile");
+
+    expect(screen.getByText(/доделала шапку и меню/)).toBeInTheDocument();
+    expect(screen.queryByText(/запустили новую версию/)).not.toBeInTheDocument();
+  });
+
+  test("a post published in the feed appears in the profile", async () => {
+    renderAt("/");
+
+    await userEvent.type(screen.getByRole("textbox", { name: "Текст публикации" }), "Пост из ленты");
+    await userEvent.click(screen.getByRole("button", { name: "Опубликовать" }));
+    await userEvent.click(menuLink("Профиль"));
+
+    expect(screen.getByText("Пост из ленты")).toBeInTheDocument();
+  });
+
+  test("a like is kept when switching pages", async () => {
+    renderAt("/profile");
+    await userEvent.click(screen.getAllByRole("button", { name: /Нравится/ })[0]);
+
+    await userEvent.click(menuLink("Лента"));
+
+    const post = screen
+      .getAllByRole("article")
+      .find((article) => within(article).queryByText(/доделала шапку и меню/));
+    expect(within(post).getByRole("button", { name: /Нравится/ })).toHaveAttribute("aria-pressed", "true");
+  });
+});

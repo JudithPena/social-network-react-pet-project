@@ -1,0 +1,21 @@
+.feed {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* Heading for screen readers only */
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+  .feed {
+    gap: 16px;
+  }
+}

@@ -1,4 +1,3 @@
-import { useState } from "react";
 import Avatar from "../Avatar/Avatar";
 import ImagePlaceholder from "../ImagePlaceholder/ImagePlaceholder";
 import styles from "./Post.module.css";
@@ -21,9 +20,7 @@ const icons = {
   ),
 };
 
-const Post = ({ author, time, text, image, likes, comments, shares }) => {
-  const [liked, setLiked] = useState(false);
-
+const Post = ({ author, time, text, image, likes, comments, shares, liked = false, onLike }) => {
   return (
     <article className={styles.post}>
       <header className={styles.header}>
@@ -42,10 +39,10 @@ const Post = ({ author, time, text, image, likes, comments, shares }) => {
           type="button"
           className={`${styles.action} ${liked ? styles.liked : ""}`}
           aria-pressed={liked}
-          onClick={() => setLiked(!liked)}
+          onClick={onLike}
         >
           {icons.like}
-          <span>{likes + (liked ? 1 : 0)}</span>
+          <span>{likes}</span>
           <span className={styles.actionLabel}>Нравится</span>
         </button>
         <button type="button" className={styles.action}>
