@@ -3,6 +3,7 @@ import { useMarket } from "../../context/MarketContext";
 import { useMessages } from "../../context/MessagesContext";
 import { currentUser } from "../../data/profile";
 import Avatar from "../Avatar/Avatar";
+import NotificationsMenu from "../Notifications/NotificationsMenu";
 import styles from "./Header.module.css";
 
 const icons = {
@@ -43,11 +44,11 @@ const icons = {
   ),
 };
 
-// Actions with a path lead to a page; notifications will open a popup later
+// Actions with a path lead to a page; notifications open a dropdown
 const actions = [
   { id: "home", path: "/", label: "Главная", count: 0 },
   { id: "messages", path: "/messages", label: "Сообщения" },
-  { id: "notifications", label: "Уведомления", count: 5 },
+  { id: "notifications", label: "Уведомления" },
   { id: "cart", path: "/marketplace/cart", label: "Корзина" },
 ];
 
@@ -81,6 +82,16 @@ const Header = () => {
               {count > 0 && <span className={styles.badge}>{count}</span>}
             </>
           );
+          if (id === "notifications") {
+            return (
+              <NotificationsMenu
+                key={id}
+                icon={icons[id]}
+                buttonClassName={styles.actionButton}
+                badgeClassName={styles.badge}
+              />
+            );
+          }
           return path ? (
             <Link key={id} className={styles.actionButton} to={path} aria-label={label}>
               {content}

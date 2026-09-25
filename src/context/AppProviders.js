@@ -3,6 +3,7 @@ import { FriendsProvider } from "./FriendsContext";
 import { GroupsProvider } from "./GroupsContext";
 import { MarketProvider } from "./MarketContext";
 import { MessagesProvider } from "./MessagesContext";
+import { NotificationsProvider } from "./NotificationsContext";
 import { PostsProvider } from "./PostsContext";
 import { SavedProvider } from "./SavedContext";
 
@@ -15,7 +16,9 @@ const AppProviders = ({ children }) => {
           <EventsProvider>
             <GroupsProvider>
               <SavedProvider>
-                <MarketProvider>{children}</MarketProvider>
+                <MarketProvider>
+                  <NotificationsProvider>{children}</NotificationsProvider>
+                </MarketProvider>
               </SavedProvider>
             </GroupsProvider>
           </EventsProvider>

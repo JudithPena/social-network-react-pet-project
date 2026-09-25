@@ -9,6 +9,7 @@ import Header from "./components/Header/Header";
 import Marketplace from "./components/Marketplace/Marketplace";
 import Messages from "./components/Messages/Messages";
 import NavBar from "./components/NavBar/NavBar";
+import Notifications from "./components/Notifications/Notifications";
 import PageStub from "./components/PageStub/PageStub";
 import Profile from "./components/Profile/Profile";
 import Saved from "./components/Saved/Saved";
@@ -43,6 +44,7 @@ function App() {
               <Route path="/events/*" element={<Events />} />
               <Route path="/marketplace/*" element={<Marketplace />} />
               <Route path="/saved/*" element={<Saved />} />
+              <Route path="/notifications/*" element={<Notifications />} />
               <Route path="/settings" element={<Settings onResetData={resetData} />} />
               <Route
                 path="*"

@@ -664,3 +664,80 @@ describe("marketplace", () => {
     expect(screen.getByRole("heading", { name: "Товар не найден" })).toBeInTheDocument();
   });
 });
+
+describe("notifications", () => {
+  const bell = () => screen.getByRole("button", { name: "Уведомления" });
+  const panel = () => screen.queryByRole("region", { name: "Панель уведомлений" });
+
+  test("the bell shows unread count and opens the latest notifications", async () => {
+    renderAt("/");
+    expect(bell()).toHaveTextContent("5");
+    expect(bell()).toHaveAttribute("aria-expanded", "false");
+
+    await userEvent.click(bell());
+
+    expect(bell()).toHaveAttribute("aria-expanded", "true");
+    expect(within(panel()).getAllByRole("link", { name: /./ })).toHaveLength(6); // 5 items + "Все уведомления"
+    expect(within(panel()).getByText(/нравится ваша публикация/)).toBeInTheDocument();
+  });
+
+  test("clicking a notification opens its page, marks it read and closes the panel", async () => {
+    renderAt("/");
+    await userEvent.click(bell());
+
+    await userEvent.click(within(panel()).getByRole("link", { name: /заявка в друзья/ }));
+
+    expect(screen.getByRole("button", { name: "Принять заявку от Mateo Garcia" })).toBeInTheDocument();
+    expect(panel()).not.toBeInTheDocument();
+    expect(bell()).toHaveTextContent("4");
+  });
+
+  test("marks all as read", async () => {
+    renderAt("/");
+    await userEvent.click(bell());
+
+    await userEvent.click(within(panel()).getByRole("button", { name: "Прочитать все" }));
+
+    expect(bell()).not.toHaveTextContent(/\d/);
+    expect(within(panel()).queryByLabelText("Не прочитано")).not.toBeInTheDocument();
+  });
+
+  test("closes on Escape and on a click outside", async () => {
+    renderAt("/");
+    await userEvent.click(bell());
+    await userEvent.keyboard("{Escape}");
+    expect(panel()).not.toBeInTheDocument();
+    expect(bell()).toHaveFocus();
+
+    await userEvent.click(bell());
+    await userEvent.click(screen.getByRole("heading", { name: "Возможно, вы знакомы" }));
+    expect(panel()).not.toBeInTheDocument();
+  });
+
+  test("the notifications page has all and unread tabs", async () => {
+    renderAt("/");
+    await userEvent.click(bell());
+    await userEvent.click(within(panel()).getByRole("link", { name: "Все уведомления" }));
+    expect(screen.getByRole("heading", { level: 1, name: "Уведомления" })).toBeInTheDocument();
+    const list = () => screen.getByRole("list", { name: "Список уведомлений" });
+    expect(within(list()).getAllByRole("listitem")).toHaveLength(8);
+
+    const tabs = screen.getByRole("navigation", { name: "Разделы уведомлений" });
+    await userEvent.click(within(tabs).getByRole("link", { name: /^Непрочитанные/ }));
+    expect(within(list()).getAllByLabelText("Не прочитано")).toHaveLength(5);
+
+    await userEvent.click(screen.getByRole("button", { name: "Отметить все как прочитанные" }));
+    expect(screen.getByText("Все уведомления прочитаны 🎉")).toBeInTheDocument();
+  });
+
+  test("keeps read state after a reload", async () => {
+    const { unmount } = renderAt("/");
+    await userEvent.click(bell());
+    await userEvent.click(within(panel()).getByRole("link", { name: /Напоминание/ }));
+
+    unmount();
+    renderAt("/");
+
+    expect(bell()).toHaveTextContent("4");
+  });
+});

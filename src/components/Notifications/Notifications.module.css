@@ -1,0 +1,253 @@
+/* Dropdown */
+.menu {
+  position: relative;
+}
+
+.panel {
+  position: absolute;
+  top: calc(100% + 12px);
+  right: -60px;
+  z-index: 20;
+  width: 380px;
+  overflow: hidden;
+  border-radius: 16px;
+  background-color: #fff;
+  box-shadow: 0 12px 40px rgba(20, 30, 60, 0.18);
+}
+
+.panelHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 16px 8px;
+}
+
+.panelTitle {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.panelFooter {
+  display: block;
+  padding: 14px;
+  border-top: 1px solid #edf0f5;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1e6cf2;
+  text-align: center;
+  text-decoration: none;
+}
+
+.panelFooter:hover {
+  background-color: #f7f9fc;
+}
+
+.textButton {
+  padding: 6px 8px;
+  border: none;
+  border-radius: 8px;
+  background: none;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1e6cf2;
+  cursor: pointer;
+}
+
+.textButton:hover {
+  background-color: #e8f0fe;
+}
+
+/* List */
+.list {
+  padding: 4px 8px 8px;
+  list-style: none;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 8px;
+  border-radius: 12px;
+  color: inherit;
+  text-decoration: none;
+  transition: background-color 0.2s;
+}
+
+.item:hover {
+  background-color: #f7f9fc;
+}
+
+.unread {
+  background-color: #f2f7ff;
+}
+
+.unread:hover {
+  background-color: #e8f0fe;
+}
+
+.visual {
+  position: relative;
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+}
+
+/* Small type badge on the avatar corner, or a big icon for system notifications */
+.typeIcon {
+  position: absolute;
+  right: -4px;
+  bottom: -4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  color: #fff;
+  box-sizing: border-box;
+}
+
+.typeIcon svg {
+  width: 12px;
+  height: 12px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.4;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+.typeIconLarge {
+  position: static;
+  width: 44px;
+  height: 44px;
+  border: none;
+}
+
+.typeIconLarge svg {
+  width: 22px;
+  height: 22px;
+  stroke-width: 1.8;
+}
+
+.like {
+  background-color: #ff4d6d;
+}
+
+.comment {
+  background-color: #1e6cf2;
+}
+
+.friend {
+  background-color: #12b886;
+}
+
+.event {
+  background-color: #f59f00;
+}
+
+.group {
+  background-color: #7b4dff;
+}
+
+.content {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.text {
+  font-size: 14px;
+  line-height: 1.4;
+  color: #4a5568;
+}
+
+.text strong {
+  font-weight: 600;
+  color: #14213d;
+}
+
+.time {
+  font-size: 12px;
+  color: #8a94a6;
+}
+
+.unread .time {
+  font-weight: 600;
+  color: #1e6cf2;
+}
+
+.dot {
+  flex-shrink: 0;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #1e6cf2;
+}
+
+/* Page */
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.header,
+.card,
+.empty {
+  overflow: hidden;
+  border-radius: 16px;
+  background-color: #fff;
+  box-shadow: 0 2px 12px rgba(20, 30, 60, 0.06);
+}
+
+.headerTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 20px 24px 16px;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.card .list {
+  padding: 8px;
+}
+
+.empty {
+  padding: 40px 24px;
+  font-size: 15px;
+  color: #8a94a6;
+  text-align: center;
+}
+
+/* On phones the dropdown spans the screen under the header */
+@media (max-width: 640px) {
+  .panel {
+    position: fixed;
+    top: 80px;
+    right: 8px;
+    left: 8px;
+    width: auto;
+    max-height: calc(100vh - 96px);
+    overflow-y: auto;
+  }
+
+  .headerTop {
+    padding: 16px 16px 12px;
+  }
+
+  .title {
+    font-size: 22px;
+  }
+}
