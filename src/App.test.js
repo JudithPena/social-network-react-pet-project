@@ -313,3 +313,56 @@ describe("messages page", () => {
     expect(screen.getByText("Диалог не найден")).toBeInTheDocument();
   });
 });
+
+describe("saving data between visits", () => {
+  // Unmounting and rendering again works like reloading the page
+  const reload = (unmount, path) => {
+    unmount();
+    return renderAt(path);
+  };
+
+  test("keeps posts, likes, friends and read messages after a reload", async () => {
+    const { unmount } = renderAt("/");
+    await userEvent.type(screen.getByRole("textbox", { name: "Текст публикации" }), "Пост до перезагрузки");
+    await userEvent.click(screen.getByRole("button", { name: "Опубликовать" }));
+    await userEvent.click(screen.getAllByRole("button", { name: /Нравится/ })[1]);
+    await userEvent.click(menuLink("Друзья"));
+    await userEvent.click(screen.getByRole("link", { name: /^Заявки/ }));
+    await userEvent.click(screen.getByRole("button", { name: "Принять заявку от Chloe Dubois" }));
+    await userEvent.click(menuLink("Сообщения"));
+    await userEvent.click(screen.getByRole("link", { name: /Maria Lopez/ }));
+
+    reload(unmount, "/");
+
+    expect(screen.getByText("Пост до перезагрузки")).toBeInTheDocument();
+    expect(screen.getAllByRole("button", { name: /Нравится/ })[1]).toHaveAttribute("aria-pressed", "true");
+    expect(menuLink("Друзья")).toHaveTextContent("2");
+    expect(menuLink("Сообщения")).toHaveTextContent("1");
+  });
+
+  test("keeps the 'going' mark on an event", async () => {
+    const { unmount } = renderAt("/");
+    await userEvent.click(screen.getByRole("button", { name: "Пойду на «React Meetup Barcelona»" }));
+
+    reload(unmount, "/");
+
+    expect(screen.getByText("49 участников")).toBeInTheDocument();
+  });
+
+  test("the settings page resets everything to the mock data", async () => {
+    renderAt("/");
+    await userEvent.type(screen.getByRole("textbox", { name: "Текст публикации" }), "Временный пост");
+    await userEvent.click(screen.getByRole("button", { name: "Опубликовать" }));
+    await userEvent.click(menuLink("Настройки"));
+
+    await userEvent.click(screen.getByRole("button", { name: "Сбросить демо-данные" }));
+    await userEvent.click(screen.getByRole("button", { name: "Отмена" }));
+    await userEvent.click(screen.getByRole("button", { name: "Сбросить демо-данные" }));
+    await userEvent.click(screen.getByRole("button", { name: "Да, сбросить" }));
+
+    expect(screen.getByRole("status")).toHaveTextContent("Демо-данные сброшены");
+    await userEvent.click(menuLink("Лента"));
+    expect(screen.queryByText("Временный пост")).not.toBeInTheDocument();
+    expect(screen.getByText(/доделала шапку и меню/)).toBeInTheDocument();
+  });
+});

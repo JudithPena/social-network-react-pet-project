@@ -1,11 +1,11 @@
-import { useState } from "react";
 import { Link } from "react-router-dom";
 import { events } from "../../data/sidebar";
+import { usePersistentState } from "../../hooks/usePersistentState";
 import { plural } from "../../utils/plural";
 import styles from "./SideBar.module.css";
 
 const UpcomingEvents = () => {
-  const [goingTo, setGoingTo] = useState([]);
+  const [goingTo, setGoingTo] = usePersistentState("goingToEvents", []);
 
   const toggleGoing = (id) => {
     setGoingTo((prev) => (prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]));

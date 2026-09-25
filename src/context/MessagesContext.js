@@ -1,5 +1,6 @@
-import { createContext, useCallback, useContext, useState } from "react";
+import { createContext, useCallback, useContext } from "react";
 import { conversations as initialConversations } from "../data/messages";
+import { usePersistentState } from "../hooks/usePersistentState";
 
 // Shared chats state for the messages page, the header and the menu
 const MessagesContext = createContext(null);
@@ -7,7 +8,7 @@ const MessagesContext = createContext(null);
 const currentTime = () => new Date().toLocaleTimeString("ru-RU", { hour: "2-digit", minute: "2-digit" });
 
 export const MessagesProvider = ({ children }) => {
-  const [conversations, setConversations] = useState(initialConversations);
+  const [conversations, setConversations] = usePersistentState("conversations", initialConversations);
 
   // person is { id, name } so a chat can be started with someone new
   const sendMessage = ({ id, name }, text) => {
@@ -28,7 +29,7 @@ export const MessagesProvider = ({ children }) => {
         ? prev.map((conversation) => (conversation.id === id ? { ...conversation, unread: 0 } : conversation))
         : prev
     );
-  }, []);
+  }, [setConversations]);
 
   const value = {
     conversations: [...conversations].sort((a, b) => b.updatedAt - a.updatedAt),

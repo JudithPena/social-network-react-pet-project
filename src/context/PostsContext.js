@@ -1,12 +1,13 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext } from "react";
 import { posts as initialPosts } from "../data/posts";
 import { currentUser } from "../data/profile";
+import { usePersistentState } from "../hooks/usePersistentState";
 
 // Shared posts state so the feed and the profile show the same posts and likes
 const PostsContext = createContext(null);
 
 export const PostsProvider = ({ children }) => {
-  const [posts, setPosts] = useState(initialPosts);
+  const [posts, setPosts] = usePersistentState("posts", initialPosts);
 
   const addPost = (text) => {
     const newPost = {

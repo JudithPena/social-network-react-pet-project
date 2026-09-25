@@ -1,18 +1,19 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext } from "react";
 import {
   friends as initialFriends,
   requests as initialRequests,
   suggestions as initialSuggestions,
 } from "../data/friends";
+import { usePersistentState } from "../hooks/usePersistentState";
 
 // Shared friends state for the friends page, the profile and the right column
 const FriendsContext = createContext(null);
 
 export const FriendsProvider = ({ children }) => {
-  const [friends, setFriends] = useState(initialFriends);
-  const [requests, setRequests] = useState(initialRequests);
-  const [suggestions, setSuggestions] = useState(initialSuggestions);
-  const [sentIds, setSentIds] = useState([]);
+  const [friends, setFriends] = usePersistentState("friends", initialFriends);
+  const [requests, setRequests] = usePersistentState("friendRequests", initialRequests);
+  const [suggestions, setSuggestions] = usePersistentState("friendSuggestions", initialSuggestions);
+  const [sentIds, setSentIds] = usePersistentState("sentFriendRequests", []);
 
   const acceptRequest = (id) => {
     const person = requests.find((request) => request.id === id);

@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
 import "./App.css";
 import Feed from "./components/Feed/Feed";
@@ -7,16 +8,25 @@ import Messages from "./components/Messages/Messages";
 import NavBar from "./components/NavBar/NavBar";
 import PageStub from "./components/PageStub/PageStub";
 import Profile from "./components/Profile/Profile";
+import Settings from "./components/Settings/Settings";
 import SideBar from "./components/SideBar/SideBar";
 import { FriendsProvider } from "./context/FriendsContext";
 import { MessagesProvider } from "./context/MessagesContext";
 import { PostsProvider } from "./context/PostsContext";
+import { clearPersistentState } from "./hooks/usePersistentState";
 function App() {
   // The messages page needs the width of the right column for the chat
   const isMessages = useLocation().pathname.startsWith("/messages");
+  // Changing the key remounts the providers so they read the cleared storage
+  const [dataVersion, setDataVersion] = useState(0);
+
+  const resetData = () => {
+    clearPersistentState();
+    setDataVersion((version) => version + 1);
+  };
 
   return (
-    <FriendsProvider>
+    <FriendsProvider key={dataVersion}>
       <MessagesProvider>
         <PostsProvider>
           <div className="App">
@@ -33,7 +43,7 @@ function App() {
                   <Route path="/events" element={<PageStub title="События" />} />
                   <Route path="/marketplace" element={<PageStub title="Маркетплейс" />} />
                   <Route path="/saved" element={<PageStub title="Сохранённое" />} />
-                  <Route path="/settings" element={<PageStub title="Настройки" />} />
+                  <Route path="/settings" element={<Settings onResetData={resetData} />} />
                   <Route
                     path="*"
                     element={<PageStub title="Страница не найдена" text="Такой страницы нет. Выберите раздел в меню." />}
