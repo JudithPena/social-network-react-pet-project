@@ -124,3 +124,38 @@ describe("feed", () => {
     expect(within(post).getByRole("button", { name: /Нравится/ })).toHaveAttribute("aria-pressed", "true");
   });
 });
+
+describe("right column", () => {
+  test("sends and cancels a friend request", async () => {
+    renderAt("/");
+    const add = screen.getByRole("button", { name: "Добавить Olivia Brown в друзья" });
+
+    await userEvent.click(add);
+    const cancel = screen.getByRole("button", { name: "Отменить заявку для Olivia Brown" });
+    expect(cancel).toHaveAttribute("aria-pressed", "true");
+
+    await userEvent.click(cancel);
+    expect(screen.getByRole("button", { name: "Добавить Olivia Brown в друзья" })).toBeInTheDocument();
+  });
+
+  test("marks going to an event and updates the counter", async () => {
+    renderAt("/");
+    expect(screen.getByText("48 участников")).toBeInTheDocument();
+
+    await userEvent.click(screen.getByRole("button", { name: "Пойду на «React Meetup Barcelona»" }));
+
+    expect(screen.getByText("49 участников")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Не пойду на «React Meetup Barcelona»" })).toHaveAttribute(
+      "aria-pressed",
+      "true"
+    );
+  });
+
+  test("links to the full lists", () => {
+    renderAt("/");
+    const [friendsLink, eventsLink] = screen.getAllByRole("link", { name: "Все" });
+
+    expect(friendsLink).toHaveAttribute("href", "/friends");
+    expect(eventsLink).toHaveAttribute("href", "/events");
+  });
+});
