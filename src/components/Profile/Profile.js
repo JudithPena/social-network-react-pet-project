@@ -1,7 +1,8 @@
-import { NavLink, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import { currentUser } from "../../data/profile";
 import Avatar from "../Avatar/Avatar";
 import PageStub from "../PageStub/PageStub";
+import Tabs from "../Tabs/Tabs";
 import ProfileAbout from "./ProfileAbout";
 import ProfileFriends from "./ProfileFriends";
 import ProfilePhotos from "./ProfilePhotos";
@@ -59,18 +60,7 @@ const Profile = () => {
           </div>
         </dl>
 
-        <nav className={styles.tabs} aria-label="Разделы профиля">
-          {tabs.map(({ path, label }) => (
-            <NavLink
-              key={path}
-              to={path}
-              end
-              className={({ isActive }) => `${styles.tab} ${isActive ? styles.activeTab : ""}`}
-            >
-              {label}
-            </NavLink>
-          ))}
-        </nav>
+        <Tabs items={tabs} label="Разделы профиля" />
       </section>
 
       <Routes>

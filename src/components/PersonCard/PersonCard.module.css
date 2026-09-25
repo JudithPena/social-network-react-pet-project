@@ -1,0 +1,36 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  padding: 20px 12px;
+  border-radius: 14px;
+  background-color: #f7f9fc;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.name {
+  max-width: 100%;
+  margin-top: 10px;
+  overflow: hidden;
+  font-size: 15px;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mutual {
+  font-size: 13px;
+  color: #8a94a6;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  margin-top: auto;
+  padding-top: 14px;
+}

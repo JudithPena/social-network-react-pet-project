@@ -155,7 +155,84 @@ describe("right column", () => {
     renderAt("/");
     const [friendsLink, eventsLink] = screen.getAllByRole("link", { name: "Все" });
 
-    expect(friendsLink).toHaveAttribute("href", "/friends");
+    expect(friendsLink).toHaveAttribute("href", "/friends/suggestions");
     expect(eventsLink).toHaveAttribute("href", "/events");
+  });
+});
+
+describe("friends page", () => {
+  const friendsTab = (name) =>
+    within(screen.getByRole("navigation", { name: "Разделы друзей" })).getByRole("link", {
+      name: new RegExp(`^${name}`),
+    });
+
+  test("lists friends and filters them by name", async () => {
+    renderAt("/friends");
+    expect(screen.getByText("Alex Morgan")).toBeInTheDocument();
+
+    await userEvent.type(screen.getByRole("searchbox", { name: "Поиск среди друзей" }), "mar");
+
+    expect(screen.getByText("Maria Lopez")).toBeInTheDocument();
+    expect(screen.queryByText("Alex Morgan")).not.toBeInTheDocument();
+
+    await userEvent.type(screen.getByRole("searchbox", { name: "Поиск среди друзей" }), "xyz");
+    expect(screen.getByText(/Никого не нашлось/)).toBeInTheDocument();
+  });
+
+  test("accepting a request adds a friend and updates the menu badge", async () => {
+    renderAt("/friends/requests");
+    expect(menuLink("Друзья")).toHaveTextContent("3");
+
+    await userEvent.click(screen.getByRole("button", { name: "Принять заявку от Chloe Dubois" }));
+
+    expect(screen.queryByText("Chloe Dubois")).not.toBeInTheDocument();
+    expect(menuLink("Друзья")).toHaveTextContent("2");
+
+    await userEvent.click(friendsTab("Все друзья"));
+    expect(screen.getByText("Chloe Dubois")).toBeInTheDocument();
+  });
+
+  test("declining the last request shows an empty state", async () => {
+    renderAt("/friends/requests");
+
+    for (const name of ["Chloe Dubois", "Mateo Garcia", "Hannah Schmidt"]) {
+      await userEvent.click(screen.getByRole("button", { name: `Отклонить заявку от ${name}` }));
+    }
+
+    expect(screen.getByText("Новых заявок нет.")).toBeInTheDocument();
+    expect(menuLink("Друзья")).not.toHaveTextContent(/\d/);
+  });
+
+  test("a request sent from the right column shows up in sent requests", async () => {
+    renderAt("/friends/sent");
+    expect(screen.getByText(/никому не отправили заявку/)).toBeInTheDocument();
+
+    const sideBar = screen.getByRole("complementary");
+    await userEvent.click(within(sideBar).getByRole("button", { name: "Добавить Olivia Brown в друзья" }));
+
+    // The sent tab has its own "Отменить заявку" button next to the one in the right column
+    await userEvent.click(screen.getByText("Отменить заявку"));
+    expect(screen.getByText(/никому не отправили заявку/)).toBeInTheDocument();
+    expect(within(sideBar).getByRole("button", { name: "Добавить Olivia Brown в друзья" })).toBeInTheDocument();
+  });
+
+  test("removing a friend also updates the profile", async () => {
+    renderAt("/friends");
+
+    await userEvent.click(screen.getByRole("button", { name: "Удалить Alex Morgan из друзей" }));
+    await userEvent.click(menuLink("Профиль"));
+    await userEvent.click(within(screen.getByRole("navigation", { name: "Разделы профиля" })).getByRole("link", { name: "Друзья" }));
+
+    expect(screen.queryByText("Alex Morgan")).not.toBeInTheDocument();
+    expect(screen.getByText("Maria Lopez")).toBeInTheDocument();
+  });
+
+  test("hides a suggestion", async () => {
+    renderAt("/friends/suggestions");
+    const main = screen.getByRole("main");
+
+    await userEvent.click(within(main).getByRole("button", { name: "Скрыть Mia Johansson из рекомендаций" }));
+
+    expect(within(main).queryByText("Mia Johansson")).not.toBeInTheDocument();
   });
 });

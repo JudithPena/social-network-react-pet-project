@@ -1,4 +1,5 @@
 import { NavLink } from "react-router-dom";
+import { useFriends } from "../../context/FriendsContext";
 import styles from "./NavBar.module.css";
 
 const icons = {
@@ -63,7 +64,7 @@ const icons = {
 const menu = [
   { id: "feed", path: "/", label: "Лента" },
   { id: "profile", path: "/profile", label: "Профиль" },
-  { id: "friends", path: "/friends", label: "Друзья", count: 12 },
+  { id: "friends", path: "/friends", label: "Друзья" },
   { id: "groups", path: "/groups", label: "Группы" },
   { id: "messages", path: "/messages", label: "Сообщения", count: 3 },
   { id: "events", path: "/events", label: "События" },
@@ -73,10 +74,13 @@ const menu = [
 ];
 
 const NavBar = () => {
+  const { requests } = useFriends();
+  const counts = { friends: requests.length };
+
   return (
     <nav className={styles.navBar} aria-label="Основное меню">
       <ul className={styles.list}>
-        {menu.map(({ id, path, label, count }) => (
+        {menu.map(({ id, path, label, count = counts[id] }) => (
           <li key={id}>
             <NavLink
               to={path}

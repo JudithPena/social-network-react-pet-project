@@ -1,12 +1,5 @@
 // Mock data for the right column
 
-export const suggestions = [
-  { id: 1, name: "Olivia Brown", mutual: 14 },
-  { id: 2, name: "Noah Wilson", mutual: 7 },
-  { id: 3, name: "Ava Martinez", mutual: 22 },
-  { id: 4, name: "Lucas Petrov", mutual: 3 },
-];
-
 export const events = [
   {
     id: 1,

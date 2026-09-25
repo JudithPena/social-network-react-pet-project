@@ -1,16 +1,11 @@
-import { useState } from "react";
 import { Link } from "react-router-dom";
-import { suggestions } from "../../data/sidebar";
+import { useFriends } from "../../context/FriendsContext";
 import { mutualFriendsLabel } from "../../utils/plural";
 import Avatar from "../Avatar/Avatar";
 import styles from "./SideBar.module.css";
 
 const SuggestedFriends = () => {
-  const [requested, setRequested] = useState([]);
-
-  const toggleRequest = (id) => {
-    setRequested((prev) => (prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]));
-  };
+  const { suggestions, isSent, sendRequest, cancelRequest } = useFriends();
 
   return (
     <section className={styles.widget} aria-labelledby="suggestions-title">
@@ -18,14 +13,14 @@ const SuggestedFriends = () => {
         <h2 id="suggestions-title" className={styles.widgetTitle}>
           Возможно, вы знакомы
         </h2>
-        <Link to="/friends" className={styles.more}>
+        <Link to="/friends/suggestions" className={styles.more}>
           Все
         </Link>
       </div>
 
       <ul className={styles.list}>
-        {suggestions.map(({ id, name, mutual }) => {
-          const isRequested = requested.includes(id);
+        {suggestions.slice(0, 4).map(({ id, name, mutual }) => {
+          const isRequested = isSent(id);
           return (
             <li key={id} className={styles.person}>
               <Avatar name={name} size={40} />
@@ -38,7 +33,7 @@ const SuggestedFriends = () => {
                 className={isRequested ? styles.secondaryButton : styles.primaryButton}
                 aria-pressed={isRequested}
                 aria-label={isRequested ? `Отменить заявку для ${name}` : `Добавить ${name} в друзья`}
-                onClick={() => toggleRequest(id)}
+                onClick={() => (isRequested ? cancelRequest(id) : sendRequest(id))}
               >
                 {isRequested ? "Отменить" : "Добавить"}
               </button>

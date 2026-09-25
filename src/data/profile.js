@@ -14,15 +14,6 @@ export const currentUser = {
   ],
 };
 
-export const friends = [
-  { id: 1, name: "Alex Morgan", mutual: 12 },
-  { id: 2, name: "Maria Lopez", mutual: 8 },
-  { id: 3, name: "Daniel Kim", mutual: 21 },
-  { id: 4, name: "Sofia Rossi", mutual: 3 },
-  { id: 5, name: "Liam Carter", mutual: 15 },
-  { id: 6, name: "Emma Novak", mutual: 6 },
-];
-
 export const photos = ["sunset", "ocean", "forest", "city", "sunset", "forest", "ocean", "city", "sunset"].map(
   (image, index) => ({ id: index + 1, image })
 );
