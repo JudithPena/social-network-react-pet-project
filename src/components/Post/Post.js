@@ -1,5 +1,6 @@
 import Avatar from "../Avatar/Avatar";
 import ImagePlaceholder from "../ImagePlaceholder/ImagePlaceholder";
+import SaveButton from "../SaveButton/SaveButton";
 import styles from "./Post.module.css";
 
 const icons = {
@@ -20,7 +21,10 @@ const icons = {
   ),
 };
 
-const Post = ({ author, time, text, image, likes, comments, shares, liked = false, onLike }) => {
+// Short quote of the post for button labels
+const excerpt = (text) => (text.length > 40 ? `${text.slice(0, 40).trim()}…` : text);
+
+const Post = ({ id, author, time, text, image, likes, comments, shares, liked = false, onLike }) => {
   return (
     <article className={styles.post}>
       <header className={styles.header}>
@@ -55,6 +59,7 @@ const Post = ({ author, time, text, image, likes, comments, shares, liked = fals
           <span>{shares}</span>
           <span className={styles.actionLabel}>Поделиться</span>
         </button>
+        <SaveButton type="post" id={id} title={excerpt(text)} className={styles.save} />
       </footer>
     </article>
   );

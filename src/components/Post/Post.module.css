@@ -71,6 +71,10 @@
   background-color: #f2f5fa;
 }
 
+.save {
+  margin-left: auto;
+}
+
 .liked {
   color: #ff4d6d;
 }

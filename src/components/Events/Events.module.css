@@ -119,6 +119,12 @@
   text-transform: uppercase;
 }
 
+.coverSave {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+}
+
 .cardBody {
   display: flex;
   flex: 1;
@@ -203,6 +209,21 @@
   font-size: 15px;
 }
 
+/* Wide card with the cover on the left, used in lists */
+.horizontal {
+  flex-direction: row;
+}
+
+.horizontal .cover {
+  flex-shrink: 0;
+  width: 220px;
+}
+
+.horizontal .coverImage {
+  height: 100%;
+  min-height: 160px;
+}
+
 /* Details */
 .detailsCover {
   height: 240px;
@@ -225,6 +246,12 @@
 
 .backLink:hover {
   text-decoration: underline;
+}
+
+.detailsActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .detailsTitle {
@@ -297,11 +324,30 @@
     height: 170px;
   }
 
+  .horizontal {
+    flex-direction: column;
+  }
+
+  .horizontal .cover {
+    width: auto;
+  }
+
+  .horizontal .coverImage {
+    height: 140px;
+    min-height: 0;
+  }
+
   .detailsBody {
     padding: 16px;
   }
 
-  .detailsTitle {
+  .detailsActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.detailsTitle {
     font-size: 22px;
   }
 

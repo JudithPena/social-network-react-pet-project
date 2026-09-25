@@ -447,3 +447,59 @@ describe("events page", () => {
     expect(screen.getByRole("heading", { name: "Событие не найдено" })).toBeInTheDocument();
   });
 });
+
+describe("saved page", () => {
+  const savedTab = (name) =>
+    within(screen.getByRole("navigation", { name: "Разделы сохранённого" })).getByRole("link", {
+      name: new RegExp(`^${name}`),
+    });
+  const savedHeadings = () =>
+    within(screen.getByRole("main"))
+      .getAllByRole("article")
+      .map((article) => within(article).queryByRole("heading")?.textContent ?? article.textContent.slice(0, 20));
+
+  test("is empty at first", () => {
+    renderAt("/saved");
+
+    expect(screen.getByText("Здесь появится всё, что вы сохраните.")).toBeInTheDocument();
+    expect(savedTab("Всё")).not.toHaveTextContent(/\d/);
+  });
+
+  test("a post saved in the feed shows up and can be removed", async () => {
+    renderAt("/");
+    await userEvent.click(screen.getByRole("button", { name: /^Сохранить «Сегодня запустили/ }));
+    expect(screen.getByRole("button", { name: /^Убрать «Сегодня запустили/ })).toHaveAttribute("aria-pressed", "true");
+
+    await userEvent.click(menuLink("Сохранённое"));
+    expect(screen.getByText(/запустили новую версию/)).toBeInTheDocument();
+    expect(savedTab("Публикации")).toHaveTextContent("1");
+
+    await userEvent.click(screen.getByRole("button", { name: /^Убрать «Сегодня запустили/ }));
+    expect(screen.queryByText(/запустили новую версию/)).not.toBeInTheDocument();
+  });
+
+  test("events are saved from the card and the details page, newest first", async () => {
+    renderAt("/events");
+    await userEvent.click(screen.getByRole("button", { name: "Сохранить «Пробежка у моря»" }));
+    await userEvent.click(screen.getByRole("link", { name: "Frontend Conf 2026" }));
+    await userEvent.click(screen.getByRole("button", { name: "Сохранить «Frontend Conf 2026»" }));
+    await userEvent.click(menuLink("Сохранённое"));
+
+    expect(savedHeadings()).toEqual(["Frontend Conf 2026", "Пробежка у моря"]);
+
+    await userEvent.click(savedTab("Публикации"));
+    expect(screen.getByText("Сохранённых публикаций пока нет.")).toBeInTheDocument();
+    await userEvent.click(savedTab("События"));
+    expect(savedHeadings()).toHaveLength(2);
+  });
+
+  test("keeps bookmarks after a reload", async () => {
+    const { unmount } = renderAt("/events/2");
+    await userEvent.click(screen.getByRole("button", { name: "Сохранить «Воркшоп по дизайн-системам»" }));
+
+    unmount();
+    renderAt("/saved/events");
+
+    expect(screen.getByRole("heading", { name: "Воркшоп по дизайн-системам" })).toBeInTheDocument();
+  });
+});

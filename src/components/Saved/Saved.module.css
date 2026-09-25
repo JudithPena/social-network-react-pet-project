@@ -1,0 +1,51 @@
+.page,
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.list {
+  list-style: none;
+}
+
+.header {
+  overflow: hidden;
+  border-radius: 16px;
+  background-color: #fff;
+  box-shadow: 0 2px 12px rgba(20, 30, 60, 0.06);
+}
+
+.title {
+  padding: 20px 24px 16px;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.empty {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 40px 24px;
+  border-radius: 16px;
+  background-color: #fff;
+  font-size: 15px;
+  color: #8a94a6;
+  text-align: center;
+}
+
+.empty a {
+  color: #1e6cf2;
+}
+
+@media (max-width: 640px) {
+  .page,
+  .list {
+    gap: 16px;
+  }
+
+  .title {
+    padding: 16px 16px 12px;
+    font-size: 22px;
+  }
+}

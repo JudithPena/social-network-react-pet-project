@@ -5,6 +5,7 @@ import { plural } from "../../utils/plural";
 import Avatar from "../Avatar/Avatar";
 import ImagePlaceholder from "../ImagePlaceholder/ImagePlaceholder";
 import PageStub from "../PageStub/PageStub";
+import SaveButton from "../SaveButton/SaveButton";
 import { categoryLabel } from "./EventCard";
 import GoingButton from "./GoingButton";
 import styles from "./Events.module.css";
@@ -54,7 +55,10 @@ const EventDetails = () => {
           </div>
         </dl>
 
-        <GoingButton event={event} large />
+        <div className={styles.detailsActions}>
+          <GoingButton event={event} large />
+          <SaveButton type="event" id={event.id} title={title} />
+        </div>
 
         <section>
           <h2 className={styles.sectionTitle}>О событии</h2>

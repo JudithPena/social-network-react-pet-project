@@ -3,23 +3,25 @@ import { categories } from "../../data/events";
 import { shortDate } from "../../utils/date";
 import { plural } from "../../utils/plural";
 import ImagePlaceholder from "../ImagePlaceholder/ImagePlaceholder";
+import SaveButton from "../SaveButton/SaveButton";
 import GoingButton from "./GoingButton";
 import styles from "./Events.module.css";
 
 export const categoryLabel = (id) => categories.find((category) => category.id === id)?.label;
 
-const EventCard = ({ event }) => {
+const EventCard = ({ event, horizontal = false }) => {
   const { id, date, time, title, place, category, image, going } = event;
   const { day, month } = shortDate(date);
 
   return (
-    <article className={styles.card}>
+    <article className={`${styles.card} ${horizontal ? styles.horizontal : ""}`}>
       <div className={styles.cover}>
         <ImagePlaceholder image={image} className={styles.coverImage} />
         <div className={styles.dateBadge} aria-label={`${day} ${month}`}>
           <span className={styles.day}>{day}</span>
           <span className={styles.month}>{month}</span>
         </div>
+        <SaveButton type="event" id={id} title={title} variant="icon" className={styles.coverSave} />
       </div>
 
       <div className={styles.cardBody}>

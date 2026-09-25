@@ -1,0 +1,64 @@
+.button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border: none;
+  font: inherit;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.button svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linejoin: round;
+}
+
+.saved svg {
+  fill: currentColor;
+}
+
+/* Looks like the post actions: plain text button */
+.text {
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: none;
+  font-size: 14px;
+  color: #4a5568;
+}
+
+.text:hover {
+  background-color: #f2f5fa;
+}
+
+.text.saved {
+  color: #1e6cf2;
+}
+
+/* Round button on top of images */
+.icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 2px 8px rgba(20, 30, 60, 0.15);
+  color: #14213d;
+}
+
+.icon:hover {
+  background-color: #fff;
+}
+
+.icon.saved {
+  color: #1e6cf2;
+}
+
+@media (max-width: 640px) {
+  .text .label {
+    display: none;
+  }
+}
