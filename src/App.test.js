@@ -366,3 +366,84 @@ describe("saving data between visits", () => {
     expect(screen.getByText(/доделала шапку и меню/)).toBeInTheDocument();
   });
 });
+
+describe("events page", () => {
+  const eventTitles = () =>
+    within(screen.getByRole("main"))
+      .getAllByRole("article")
+      .map((card) => within(card).getByRole("heading").textContent);
+  const eventsTab = (name) =>
+    within(screen.getByRole("navigation", { name: "Разделы событий" })).getByRole("link", {
+      name: new RegExp(`^${name}`),
+    });
+
+  test("lists events by date and filters them by category", async () => {
+    renderAt("/events");
+    expect(eventTitles()).toEqual([
+      "React Meetup Barcelona",
+      "Воркшоп по дизайн-системам",
+      "Пробежка у моря",
+      "Вечер настольных игр",
+      "Frontend Conf 2026",
+      "Велопрогулка на Монжуик",
+    ]);
+
+    await userEvent.click(screen.getByRole("button", { name: "IT" }));
+
+    expect(screen.getByRole("button", { name: "IT" })).toHaveAttribute("aria-pressed", "true");
+    expect(eventTitles()).toEqual(["React Meetup Barcelona", "Frontend Conf 2026"]);
+  });
+
+  test("reads the category from the URL", () => {
+    renderAt("/events?category=sport");
+
+    expect(eventTitles()).toEqual(["Пробежка у моря", "Велопрогулка на Монжуик"]);
+  });
+
+  test("going marks are shared with the right column and the 'Я иду' tab", async () => {
+    renderAt("/events/going");
+    expect(screen.getByText(/никуда не собираетесь/)).toBeInTheDocument();
+
+    await userEvent.click(eventsTab("Все события"));
+    const card = within(screen.getByRole("main"))
+      .getAllByRole("article")
+      .find((article) => within(article).queryByText("Вечер настольных игр"));
+    await userEvent.click(within(card).getByRole("button", { name: "Пойду на «Вечер настольных игр»" }));
+    // The first event is also in the right column; mark it there
+    const sideBar = screen.getByRole("complementary");
+    await userEvent.click(within(sideBar).getByRole("button", { name: "Пойду на «React Meetup Barcelona»" }));
+
+    expect(eventsTab("Я иду")).toHaveTextContent("2");
+    await userEvent.click(eventsTab("Я иду"));
+    expect(eventTitles()).toEqual(["React Meetup Barcelona", "Вечер настольных игр"]);
+  });
+
+  test("shows event details", async () => {
+    renderAt("/events/1");
+
+    expect(screen.getByRole("heading", { level: 1, name: "React Meetup Barcelona" })).toBeInTheDocument();
+    expect(screen.getByText("28 сентября, 19:00")).toBeInTheDocument();
+    expect(screen.getByText("48 человек")).toBeInTheDocument();
+    expect(screen.getByText("Maria Lopez")).toBeInTheDocument();
+
+    const main = screen.getByRole("main");
+    await userEvent.click(within(main).getAllByRole("button", { name: "Пойду на «React Meetup Barcelona»" })[0]);
+
+    expect(screen.getByText("49 человек")).toBeInTheDocument();
+    expect(menuLink("События")).toHaveAttribute("aria-current", "page");
+  });
+
+  test("the right column links to event details", async () => {
+    renderAt("/");
+
+    await userEvent.click(within(screen.getByRole("complementary")).getByRole("link", { name: "Пробежка у моря" }));
+
+    expect(screen.getByRole("heading", { level: 1, name: "Пробежка у моря" })).toBeInTheDocument();
+  });
+
+  test("shows not found for an unknown event", () => {
+    renderAt("/events/999");
+
+    expect(screen.getByRole("heading", { name: "Событие не найдено" })).toBeInTheDocument();
+  });
+});

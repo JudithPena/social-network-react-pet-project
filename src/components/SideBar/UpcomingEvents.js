@@ -1,15 +1,11 @@
 import { Link } from "react-router-dom";
-import { events } from "../../data/sidebar";
-import { usePersistentState } from "../../hooks/usePersistentState";
+import { useEvents } from "../../context/EventsContext";
+import { shortDate } from "../../utils/date";
 import { plural } from "../../utils/plural";
 import styles from "./SideBar.module.css";
 
 const UpcomingEvents = () => {
-  const [goingTo, setGoingTo] = usePersistentState("goingToEvents", []);
-
-  const toggleGoing = (id) => {
-    setGoingTo((prev) => (prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]));
-  };
+  const { events, toggleGoing } = useEvents();
 
   return (
     <section className={styles.widget} aria-labelledby="events-title">
@@ -23,9 +19,8 @@ const UpcomingEvents = () => {
       </div>
 
       <ul className={styles.list}>
-        {events.map(({ id, day, month, title, time, place, going }) => {
-          const isGoing = goingTo.includes(id);
-          const count = going + (isGoing ? 1 : 0);
+        {events.slice(0, 3).map(({ id, date, title, time, place, going, isGoing }) => {
+          const { day, month } = shortDate(date);
           return (
             <li key={id} className={styles.event}>
               <div className={styles.date} aria-label={`${day} ${month}`}>
@@ -33,13 +28,15 @@ const UpcomingEvents = () => {
                 <span className={styles.month}>{month}</span>
               </div>
               <div className={styles.eventInfo}>
-                <div className={styles.eventTitle}>{title}</div>
+                <Link to={`/events/${id}`} className={styles.eventTitle}>
+                  {title}
+                </Link>
                 <div className={styles.muted}>
                   {time} · {place}
                 </div>
                 <div className={styles.eventFooter}>
                   <span className={styles.muted}>
-                    {count} {plural(count, ["участник", "участника", "участников"])}
+                    {going} {plural(going, ["участник", "участника", "участников"])}
                   </span>
                   <button
                     type="button"
