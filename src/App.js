@@ -6,6 +6,7 @@ import Feed from "./components/Feed/Feed";
 import Friends from "./components/Friends/Friends";
 import Groups from "./components/Groups/Groups";
 import Header from "./components/Header/Header";
+import Marketplace from "./components/Marketplace/Marketplace";
 import Messages from "./components/Messages/Messages";
 import NavBar from "./components/NavBar/NavBar";
 import PageStub from "./components/PageStub/PageStub";
@@ -40,7 +41,7 @@ function App() {
               <Route path="/groups/*" element={<Groups />} />
               <Route path="/messages/*" element={<Messages />} />
               <Route path="/events/*" element={<Events />} />
-              <Route path="/marketplace" element={<PageStub title="Маркетплейс" />} />
+              <Route path="/marketplace/*" element={<Marketplace />} />
               <Route path="/saved/*" element={<Saved />} />
               <Route path="/settings" element={<Settings onResetData={resetData} />} />
               <Route

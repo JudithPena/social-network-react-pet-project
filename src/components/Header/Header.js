@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { useMarket } from "../../context/MarketContext";
 import { useMessages } from "../../context/MessagesContext";
 import { currentUser } from "../../data/profile";
 import Avatar from "../Avatar/Avatar";
@@ -42,17 +43,18 @@ const icons = {
   ),
 };
 
-// Actions with a path lead to a page, the rest will open popups later
+// Actions with a path lead to a page; notifications will open a popup later
 const actions = [
   { id: "home", path: "/", label: "Главная", count: 0 },
   { id: "messages", path: "/messages", label: "Сообщения" },
   { id: "notifications", label: "Уведомления", count: 5 },
-  { id: "cart", label: "Корзина", count: 0 },
+  { id: "cart", path: "/marketplace/cart", label: "Корзина" },
 ];
 
 const Header = () => {
   const { unreadCount } = useMessages();
-  const counts = { messages: unreadCount };
+  const { cartCount } = useMarket();
+  const counts = { messages: unreadCount, cart: cartCount };
 
   return (
     <header className={styles.header}>

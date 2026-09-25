@@ -580,3 +580,87 @@ describe("groups page", () => {
     expect(screen.getByRole("heading", { name: "Группа не найдена" })).toBeInTheDocument();
   });
 });
+
+describe("marketplace", () => {
+  const productTitles = () =>
+    within(screen.getByRole("main"))
+      .getAllByRole("article")
+      .map((card) => within(card).getByRole("heading").textContent);
+  const headerCart = () => within(screen.getByRole("banner")).getByRole("link", { name: "Корзина" });
+  // Intl puts non-breaking spaces into prices, compare with plain spaces
+  const text = (element) => element.textContent.replace(/\s/g, " ");
+
+  test("filters by category, sorts by price and searches", async () => {
+    renderAt("/marketplace?category=furniture");
+    expect(productTitles()).toEqual(["Кресло в скандинавском стиле", "Рабочий стол 140×70"]);
+
+    await userEvent.selectOptions(screen.getByRole("combobox", { name: "Сортировка" }), "expensive");
+    expect(productTitles()).toEqual(["Кресло в скандинавском стиле", "Рабочий стол 140×70"]);
+    await userEvent.selectOptions(screen.getByRole("combobox", { name: "Сортировка" }), "cheap");
+    expect(productTitles()).toEqual(["Рабочий стол 140×70", "Кресло в скандинавском стиле"]);
+
+    await userEvent.click(screen.getByRole("button", { name: "Все" }));
+    await userEvent.type(screen.getByRole("searchbox", { name: "Поиск товаров" }), "наушники");
+    expect(productTitles()).toEqual(["Наушники Sony WH-1000XM5"]);
+  });
+
+  test("adds products to the cart and changes quantities", async () => {
+    renderAt("/marketplace/5");
+    expect(screen.getByRole("heading", { level: 1, name: "Наушники Sony WH-1000XM5" })).toBeInTheDocument();
+
+    await userEvent.click(screen.getByRole("button", { name: "В корзину" }));
+    expect(headerCart()).toHaveTextContent("1");
+    await userEvent.click(screen.getByRole("link", { name: "← Все товары" }));
+    await userEvent.click(screen.getByRole("link", { name: /Рабочий стол/ }));
+    await userEvent.click(screen.getByRole("button", { name: "В корзину" }));
+    await userEvent.click(screen.getByRole("link", { name: "В корзине ✓ Перейти" }));
+
+    await userEvent.click(screen.getByRole("button", { name: "Увеличить количество «Рабочий стол 140×70»" }));
+    expect(screen.getByLabelText("Количество «Рабочий стол 140×70»")).toHaveTextContent("2");
+    expect(text(screen.getByRole("region", { name: "Итого" }))).toContain("3 товара");
+    expect(text(screen.getByRole("region", { name: "Итого" }))).toContain("Итого: 420 €");
+    expect(headerCart()).toHaveTextContent("3");
+
+    await userEvent.click(screen.getByRole("button", { name: "Удалить «Наушники Sony WH-1000XM5» из корзины" }));
+    await userEvent.click(screen.getByRole("button", { name: "Уменьшить количество «Рабочий стол 140×70»" }));
+    expect(text(screen.getByRole("region", { name: "Итого" }))).toContain("Итого: 90 €");
+
+    await userEvent.click(screen.getByRole("button", { name: "Уменьшить количество «Рабочий стол 140×70»" }));
+    expect(screen.getByText("Корзина пуста.")).toBeInTheDocument();
+  });
+
+  test("checkout empties the cart", async () => {
+    renderAt("/marketplace/4");
+    await userEvent.click(screen.getByRole("button", { name: "В корзину" }));
+    await userEvent.click(headerCart());
+
+    await userEvent.click(screen.getByRole("button", { name: "Оформить заказ" }));
+
+    expect(screen.getByRole("status")).toHaveTextContent("Заказ оформлен");
+    expect(headerCart()).not.toHaveTextContent(/\d/);
+  });
+
+  test("'Написать продавцу' opens a chat with the seller", async () => {
+    renderAt("/marketplace/3");
+
+    await userEvent.click(screen.getByRole("link", { name: "Написать продавцу" }));
+
+    expect(screen.getByRole("region", { name: "Диалог с Emma Novak" })).toBeInTheDocument();
+  });
+
+  test("keeps the cart after a reload", async () => {
+    const { unmount } = renderAt("/marketplace/1");
+    await userEvent.click(screen.getByRole("button", { name: "В корзину" }));
+
+    unmount();
+    renderAt("/marketplace/cart");
+
+    expect(screen.getByRole("link", { name: "MacBook Air M2, 256 ГБ" })).toBeInTheDocument();
+  });
+
+  test("shows not found for an unknown product", () => {
+    renderAt("/marketplace/999");
+
+    expect(screen.getByRole("heading", { name: "Товар не найден" })).toBeInTheDocument();
+  });
+});
