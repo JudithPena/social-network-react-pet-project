@@ -1,4 +1,6 @@
 import { Link } from "react-router-dom";
+import { currentUser } from "../../data/profile";
+import Avatar from "../Avatar/Avatar";
 import styles from "./Header.module.css";
 
 const icons = {
@@ -85,10 +87,10 @@ const Header = () => {
         })}
 
         <Link className={styles.profile} to="/profile" aria-label="Профиль">
-          <span className={styles.avatar}>JP</span>
+          <Avatar name={currentUser.name} size={44} />
           <span className={styles.profileInfo}>
-            <span className={styles.profileName}>Judith Pena</span>
-            <span className={styles.profileRole}>@judithpena</span>
+            <span className={styles.profileName}>{currentUser.name}</span>
+            <span className={styles.profileRole}>@{currentUser.handle}</span>
           </span>
         </Link>
       </nav>

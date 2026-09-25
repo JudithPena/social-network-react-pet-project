@@ -14,7 +14,7 @@ function App() {
         <section className="App-content">
           <Routes>
             <Route path="/" element={<PageStub title="Лента" />} />
-            <Route path="/profile" element={<Profile />} />
+            <Route path="/profile/*" element={<Profile />} />
             <Route path="/friends" element={<PageStub title="Друзья" />} />
             <Route path="/groups" element={<PageStub title="Группы" />} />
             <Route path="/messages" element={<PageStub title="Сообщения" />} />

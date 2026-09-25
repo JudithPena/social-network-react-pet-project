@@ -149,18 +149,6 @@
   cursor: pointer;
 }
 
-.avatar {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #1e6cf2, #7b4dff);
-  color: #fff;
-  font-weight: 600;
-}
-
 .profileInfo {
   display: flex;
   flex-direction: column;
@@ -196,5 +184,14 @@
 
   .actions {
     gap: 8px;
+  }
+
+  .actionButton {
+    width: 40px;
+    height: 40px;
+  }
+
+  .profile {
+    margin-left: 0;
   }
 }

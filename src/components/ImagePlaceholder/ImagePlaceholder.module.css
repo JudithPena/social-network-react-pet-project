@@ -1,0 +1,29 @@
+.placeholder {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, #c3d0e6, #8a94a6);
+}
+
+.placeholder svg {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  fill: rgba(255, 255, 255, 0.35);
+}
+
+.sunset {
+  background: linear-gradient(160deg, #ffb86b, #ff6b8b 55%, #7b4dff);
+}
+
+.ocean {
+  background: linear-gradient(160deg, #74c0fc, #1e6cf2 60%, #173a8c);
+}
+
+.forest {
+  background: linear-gradient(160deg, #b2f2bb, #2f9e44 60%, #1b4332);
+}
+
+.city {
+  background: linear-gradient(160deg, #ced4da, #6c7a99 60%, #2b2f45);
+}

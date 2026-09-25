@@ -1,0 +1,94 @@
+.post {
+  padding: 20px 24px;
+  border-radius: 16px;
+  background-color: #fff;
+  box-shadow: 0 2px 12px rgba(20, 30, 60, 0.06);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.author {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.time {
+  font-size: 13px;
+  color: #8a94a6;
+}
+
+.text {
+  font-size: 15px;
+  line-height: 1.55;
+  white-space: pre-line;
+}
+
+.image {
+  height: 280px;
+  margin-top: 14px;
+  border-radius: 12px;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid #edf0f5;
+}
+
+.action {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 10px;
+  background: none;
+  font: inherit;
+  font-size: 14px;
+  color: #4a5568;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.action svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+.action:hover {
+  background-color: #f2f5fa;
+}
+
+.liked {
+  color: #ff4d6d;
+}
+
+.liked svg {
+  fill: currentColor;
+}
+
+@media (max-width: 640px) {
+  .post {
+    padding: 16px;
+  }
+
+  .image {
+    height: 200px;
+  }
+
+  .actionLabel {
+    display: none;
+  }
+}
