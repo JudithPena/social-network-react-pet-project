@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { useMessages } from "../../context/MessagesContext";
 import { currentUser } from "../../data/profile";
 import Avatar from "../Avatar/Avatar";
 import styles from "./Header.module.css";
@@ -44,12 +45,15 @@ const icons = {
 // Actions with a path lead to a page, the rest will open popups later
 const actions = [
   { id: "home", path: "/", label: "Главная", count: 0 },
-  { id: "messages", path: "/messages", label: "Сообщения", count: 3 },
+  { id: "messages", path: "/messages", label: "Сообщения" },
   { id: "notifications", label: "Уведомления", count: 5 },
   { id: "cart", label: "Корзина", count: 0 },
 ];
 
 const Header = () => {
+  const { unreadCount } = useMessages();
+  const counts = { messages: unreadCount };
+
   return (
     <header className={styles.header}>
       <Link className={styles.logo} to="/">
@@ -68,7 +72,7 @@ const Header = () => {
       </form>
 
       <nav className={styles.actions}>
-        {actions.map(({ id, path, label, count }) => {
+        {actions.map(({ id, path, label, count = counts[id] }) => {
           const content = (
             <>
               {icons[id]}

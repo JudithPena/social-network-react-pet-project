@@ -31,7 +31,7 @@ const FriendsAll = () => {
           {visible.map(({ id, name, mutual }) => (
             <li key={id}>
               <PersonCard name={name} mutual={mutual}>
-                <Link to="/messages" className={styles.primaryButton}>
+                <Link to={`/messages/${id}`} className={styles.primaryButton}>
                   Написать
                 </Link>
                 <button

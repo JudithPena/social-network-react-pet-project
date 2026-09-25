@@ -1,5 +1,6 @@
 import { NavLink } from "react-router-dom";
 import { useFriends } from "../../context/FriendsContext";
+import { useMessages } from "../../context/MessagesContext";
 import styles from "./NavBar.module.css";
 
 const icons = {
@@ -66,7 +67,7 @@ const menu = [
   { id: "profile", path: "/profile", label: "Профиль" },
   { id: "friends", path: "/friends", label: "Друзья" },
   { id: "groups", path: "/groups", label: "Группы" },
-  { id: "messages", path: "/messages", label: "Сообщения", count: 3 },
+  { id: "messages", path: "/messages", label: "Сообщения" },
   { id: "events", path: "/events", label: "События" },
   { id: "marketplace", path: "/marketplace", label: "Маркетплейс" },
   { id: "saved", path: "/saved", label: "Сохранённое" },
@@ -75,7 +76,8 @@ const menu = [
 
 const NavBar = () => {
   const { requests } = useFriends();
-  const counts = { friends: requests.length };
+  const { unreadCount } = useMessages();
+  const counts = { friends: requests.length, messages: unreadCount };
 
   return (
     <nav className={styles.navBar} aria-label="Основное меню">

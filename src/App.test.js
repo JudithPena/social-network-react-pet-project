@@ -236,3 +236,80 @@ describe("friends page", () => {
     expect(within(main).queryByText("Mia Johansson")).not.toBeInTheDocument();
   });
 });
+
+describe("messages page", () => {
+  const dialogs = () => screen.getByRole("region", { name: "Диалоги" });
+  const dialogLink = (name) => within(dialogs()).getByRole("link", { name: new RegExp(name) });
+  const headerMessages = () => screen.getByRole("link", { name: "Сообщения" });
+
+  test("lists conversations and hides the right column", () => {
+    renderAt("/messages");
+
+    expect(dialogLink("Maria Lopez")).toHaveTextContent("Будет вся команда");
+    expect(screen.getByText("Выберите диалог слева, чтобы начать переписку")).toBeInTheDocument();
+    expect(screen.queryByRole("complementary")).not.toBeInTheDocument();
+  });
+
+  test("opening a conversation marks it as read", async () => {
+    renderAt("/messages");
+    expect(menuLink("Сообщения")).toHaveTextContent("2");
+    expect(headerMessages()).toHaveTextContent("2");
+
+    await userEvent.click(dialogLink("Maria Lopez"));
+
+    const chat = screen.getByRole("region", { name: "Диалог с Maria Lopez" });
+    expect(within(chat).getByText("Спасибо! В пятницу отмечаем, приходи")).toBeInTheDocument();
+    expect(within(dialogLink("Maria Lopez")).queryByLabelText(/непрочитанных/)).not.toBeInTheDocument();
+    expect(within(dialogLink("Alex Morgan")).getByLabelText("1 непрочитанных")).toBeInTheDocument();
+    expect(menuLink("Сообщения")).toHaveTextContent("1");
+    expect(headerMessages()).toHaveTextContent("1");
+  });
+
+  test("sends a message with the button and with Enter", async () => {
+    renderAt("/messages/3");
+    const input = screen.getByRole("textbox", { name: "Текст сообщения" });
+    expect(screen.getByRole("button", { name: "Отправить" })).toBeDisabled();
+
+    await userEvent.type(input, "Привет!");
+    await userEvent.click(screen.getByRole("button", { name: "Отправить" }));
+    await userEvent.type(input, "Как дела?{Enter}");
+
+    const chat = screen.getByRole("region", { name: "Диалог с Daniel Kim" });
+    expect(within(chat).getByText("Привет!")).toBeInTheDocument();
+    expect(within(chat).getByText("Как дела?")).toBeInTheDocument();
+    expect(input).toHaveValue("");
+    // The conversation moves to the top with a preview of the last message
+    const [first] = within(dialogs()).getAllByRole("link");
+    expect(first).toHaveTextContent("Daniel Kim");
+    expect(first).toHaveTextContent("Вы: Как дела?");
+  });
+
+  test("Shift+Enter adds a new line instead of sending", async () => {
+    renderAt("/messages/3");
+    const input = screen.getByRole("textbox", { name: "Текст сообщения" });
+
+    await userEvent.type(input, "Первая{Shift>}{Enter}{/Shift}вторая");
+
+    expect(input).toHaveValue("Первая\nвторая");
+  });
+
+  test("'Написать' on the friends page starts a new conversation", async () => {
+    renderAt("/friends");
+    // Emma Novak is the last friend in the list and has no conversation yet
+    await userEvent.click(screen.getAllByRole("link", { name: "Написать" })[5]);
+
+    const chat = screen.getByRole("region", { name: "Диалог с Emma Novak" });
+    expect(within(chat).getByText("Напишите первое сообщение")).toBeInTheDocument();
+    expect(within(dialogs()).queryByText("Emma Novak")).not.toBeInTheDocument();
+
+    await userEvent.type(screen.getByRole("textbox", { name: "Текст сообщения" }), "Привет, Эмма!{Enter}");
+
+    expect(dialogLink("Emma Novak")).toHaveTextContent("Вы: Привет, Эмма!");
+  });
+
+  test("shows not found for an unknown conversation", () => {
+    renderAt("/messages/999");
+
+    expect(screen.getByText("Диалог не найден")).toBeInTheDocument();
+  });
+});
