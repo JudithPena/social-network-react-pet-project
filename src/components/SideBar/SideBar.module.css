@@ -1,4 +1,14 @@
-.sideBar{
-    grid-area: sideBar;
-    background-color: blue;
+.sideBar {
+  grid-area: sideBar;
+  min-height: 320px;
+  padding: 24px;
+  border-radius: 16px;
+  background-color: #fff;
+  box-shadow: 0 2px 12px rgba(20, 30, 60, 0.06);
+}
+
+@media (max-width: 1100px) {
+  .sideBar {
+    display: none;
   }
+}

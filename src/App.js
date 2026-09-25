@@ -7,9 +7,11 @@ function App() {
   return (
     <div className="App">
       <Header />
-      <NavBar />
-      <Profile />
-      <SideBar />
+      <main className="App-layout">
+        <NavBar />
+        <Profile />
+        <SideBar />
+      </main>
     </div>
   );
 }

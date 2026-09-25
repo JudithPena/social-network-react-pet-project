@@ -1,5 +1,4 @@
 .header {
-  grid-area: header;
   position: sticky;
   top: 0;
   z-index: 10;
@@ -7,7 +6,8 @@
   align-items: center;
   gap: 24px;
   height: 72px;
-  padding: 0 24px;
+  /* align with .App-layout: 1280px max-width minus 24px side padding */
+  padding: 0 max(24px, calc((100% - 1232px) / 2));
   background-color: #fff;
   box-shadow: 0 2px 12px rgba(20, 30, 60, 0.08);
 }
