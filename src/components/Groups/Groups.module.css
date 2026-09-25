@@ -1,0 +1,298 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.header,
+.card,
+.groupHeader,
+.block {
+  overflow: hidden;
+  border-radius: 16px;
+  background-color: #fff;
+  box-shadow: 0 2px 12px rgba(20, 30, 60, 0.06);
+}
+
+.title {
+  padding: 20px 24px 16px;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.search {
+  width: 100%;
+  height: 44px;
+  padding: 0 16px;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  background-color: #fff;
+  box-shadow: 0 2px 12px rgba(20, 30, 60, 0.06);
+  font: inherit;
+  font-size: 15px;
+  color: #14213d;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.search:focus {
+  border-color: #1e6cf2;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 20px;
+  list-style: none;
+}
+
+.empty,
+.notice {
+  padding: 32px 24px;
+  border-radius: 16px;
+  background-color: #fff;
+  font-size: 15px;
+  color: #8a94a6;
+  text-align: center;
+}
+
+.notice {
+  padding: 16px 24px;
+}
+
+.empty a {
+  color: #1e6cf2;
+}
+
+.muted {
+  font-size: 13px;
+  color: #8a94a6;
+}
+
+/* Card */
+.card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.cardCover {
+  height: 100px;
+}
+
+.cardBody {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  padding: 0 16px 16px;
+}
+
+/* Parent class wins over the round shape from Avatar.module.css */
+.cardBody .cardAvatar {
+  /* Positioned so it is painted above the cover it overlaps */
+  position: relative;
+  margin-top: -28px;
+  border: 3px solid #fff;
+  border-radius: 14px;
+}
+
+.cardTitle {
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.cardTitle a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.cardTitle a:hover {
+  color: #1e6cf2;
+}
+
+.cardText {
+  display: -webkit-box;
+  margin-bottom: 8px;
+  overflow: hidden;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #4a5568;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.card button {
+  margin-top: auto;
+}
+
+.primaryButton,
+.secondaryButton {
+  flex-shrink: 0;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.primaryButton {
+  background-color: #1e6cf2;
+  color: #fff;
+}
+
+.primaryButton:hover {
+  background-color: #1759cc;
+}
+
+.secondaryButton {
+  background-color: #e9edf4;
+  color: #4a5568;
+}
+
+.secondaryButton:hover {
+  background-color: #dde3ed;
+}
+
+.largeButton {
+  padding: 12px 24px;
+  font-size: 15px;
+}
+
+/* Group page */
+.groupCover {
+  height: 180px;
+}
+
+.groupInfo {
+  display: flex;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 16px 20px;
+  padding: 0 24px 24px;
+}
+
+.groupInfo .groupAvatar {
+  position: relative;
+  margin-top: -48px;
+  border: 5px solid #fff;
+  border-radius: 24px;
+}
+
+.groupIdentity {
+  flex: 1;
+  min-width: 220px;
+}
+
+.backLink {
+  font-size: 14px;
+  font-weight: 500;
+  color: #1e6cf2;
+  text-decoration: none;
+}
+
+.backLink:hover {
+  text-decoration: underline;
+}
+
+.groupName {
+  margin: 4px 0 2px;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.block {
+  padding: 24px;
+}
+
+.blockTitle {
+  margin-bottom: 8px;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.subTitle {
+  margin: 16px 0 8px;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.description {
+  font-size: 15px;
+  line-height: 1.6;
+  color: #4a5568;
+}
+
+.rules {
+  padding-left: 20px;
+  font-size: 15px;
+  line-height: 1.7;
+  color: #4a5568;
+}
+
+.friends {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 20px;
+  list-style: none;
+}
+
+.friend {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+@media (max-width: 640px) {
+  .page {
+    gap: 16px;
+  }
+
+  .title {
+    padding: 16px 16px 12px;
+    font-size: 22px;
+  }
+
+  .grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+  }
+
+  .groupCover {
+    height: 130px;
+  }
+
+  .groupInfo {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0 16px 16px;
+  }
+
+  .groupInfo button {
+    width: 100%;
+  }
+
+  .groupInfo .groupAvatar {
+    margin-top: -40px;
+  }
+
+  .groupIdentity {
+    min-width: 0;
+  }
+
+  .groupName {
+    font-size: 21px;
+  }
+
+  .block {
+    padding: 16px;
+  }
+}

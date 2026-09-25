@@ -503,3 +503,80 @@ describe("saved page", () => {
     expect(screen.getByRole("heading", { name: "Воркшоп по дизайн-системам" })).toBeInTheDocument();
   });
 });
+
+describe("groups page", () => {
+  const groupNames = () =>
+    within(screen.getByRole("main"))
+      .getAllByRole("article")
+      .map((card) => within(card).getByRole("heading").textContent);
+  const groupsTab = (name) =>
+    within(screen.getByRole("navigation", { name: "Разделы групп" })).getByRole("link", {
+      name: new RegExp(`^${name}`),
+    });
+
+  test("lists groups, searches and shows the user's groups", async () => {
+    renderAt("/groups");
+    expect(groupNames()).toHaveLength(6);
+
+    await userEvent.type(screen.getByRole("searchbox", { name: "Поиск групп" }), "design");
+    expect(groupNames()).toEqual(["UI/UX Design Community"]);
+
+    // The search query stays when switching tabs, so clear it first
+    await userEvent.clear(screen.getByRole("searchbox", { name: "Поиск групп" }));
+    await userEvent.click(groupsTab("Мои группы"));
+    expect(groupNames()).toEqual(["React Developers Barcelona", "Бегуны Барселоны"]);
+  });
+
+  test("joining a group updates members and the 'Мои группы' tab", async () => {
+    renderAt("/groups");
+    expect(screen.getByText("Дизайн · 3 400 участников")).toBeInTheDocument();
+
+    await userEvent.click(screen.getByRole("button", { name: "Вступить в группу «UI/UX Design Community»" }));
+
+    expect(screen.getByText("Дизайн · 3 401 участник")).toBeInTheDocument();
+    expect(groupsTab("Мои группы")).toHaveTextContent("3");
+  });
+
+  test("only members can post in a group", async () => {
+    renderAt("/groups/2");
+    expect(screen.getByRole("heading", { level: 1, name: "UI/UX Design Community" })).toBeInTheDocument();
+    expect(screen.getByText(/подборку лучших дашбордов/)).toBeInTheDocument();
+    expect(screen.getByText("Вступите в группу, чтобы публиковать посты.")).toBeInTheDocument();
+    expect(screen.queryByRole("textbox", { name: "Текст публикации" })).not.toBeInTheDocument();
+
+    await userEvent.click(screen.getByRole("button", { name: "Вступить в группу «UI/UX Design Community»" }));
+    await userEvent.type(screen.getByRole("textbox", { name: "Текст публикации" }), "Всем привет из группы!");
+    await userEvent.click(screen.getByRole("button", { name: "Опубликовать" }));
+
+    expect(screen.getByText("Всем привет из группы!")).toBeInTheDocument();
+  });
+
+  test("group posts can be liked and saved", async () => {
+    renderAt("/groups/1");
+    const likeButton = screen.getAllByRole("button", { name: /Нравится/ })[0];
+    await userEvent.click(likeButton);
+    expect(likeButton).toHaveTextContent("13");
+    await userEvent.click(screen.getByRole("button", { name: /^Сохранить «Кто идёт на митап/ }));
+
+    await userEvent.click(menuLink("Сохранённое"));
+
+    expect(screen.getByText(/Кто идёт на митап 28-го/)).toBeInTheDocument();
+    expect(screen.getAllByRole("button", { name: /Нравится/ })[0]).toHaveAttribute("aria-pressed", "true");
+  });
+
+  test("keeps membership after a reload", async () => {
+    const { unmount } = renderAt("/groups/1");
+    await userEvent.click(screen.getByRole("button", { name: "Выйти из группы «React Developers Barcelona»" }));
+
+    unmount();
+    renderAt("/groups/mine");
+
+    expect(groupNames()).toEqual(["Бегуны Барселоны"]);
+  });
+
+  test("shows not found for an unknown group", () => {
+    renderAt("/groups/999");
+
+    expect(screen.getByRole("heading", { name: "Группа не найдена" })).toBeInTheDocument();
+  });
+});

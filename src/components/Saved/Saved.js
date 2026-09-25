@@ -1,5 +1,6 @@
 import { Link, Route, Routes } from "react-router-dom";
 import { useEvents } from "../../context/EventsContext";
+import { useGroups } from "../../context/GroupsContext";
 import { usePosts } from "../../context/PostsContext";
 import { useSaved } from "../../context/SavedContext";
 import EventCard from "../Events/EventCard";
@@ -17,13 +18,22 @@ const SavedList = ({ type = "all" }) => {
   const { items } = useSaved();
   const { posts, toggleLike } = usePosts();
   const { getEvent } = useEvents();
+  const { groupPosts, toggleGroupPostLike } = useGroups();
+
+  // Bookmarked posts can come from the feed or from a group
+  const findPost = (id) => {
+    const post = posts.find((item) => item.id === id);
+    if (post) return { ...post, onLike: () => toggleLike(id) };
+    const groupPost = groupPosts.find((item) => item.id === id);
+    return groupPost && { ...groupPost, onLike: () => toggleGroupPostLike(id) };
+  };
 
   // Keep the saved order and drop bookmarks whose post or event no longer exists
   const entries = items
     .filter((item) => type === "all" || item.type === type)
     .map((item) => ({
       ...item,
-      data: item.type === "post" ? posts.find((post) => post.id === item.id) : getEvent(item.id),
+      data: item.type === "post" ? findPost(item.id) : getEvent(item.id),
     }))
     .filter((entry) => entry.data);
 
@@ -44,7 +54,7 @@ const SavedList = ({ type = "all" }) => {
       {entries.map(({ type: itemType, id, data }) => (
         <li key={`${itemType}-${id}`}>
           {itemType === "post" ? (
-            <Post {...data} onLike={() => toggleLike(id)} />
+            <Post {...data} />
           ) : (
             <EventCard event={data} horizontal />
           )}

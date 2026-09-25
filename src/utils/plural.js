@@ -7,6 +7,10 @@ export const plural = (count, [one, few, many]) => {
   return many;
 };
 
+// 1250 -> "1 250 участников"
+export const membersLabel = (count) =>
+  `${count.toLocaleString("ru-RU")} ${plural(count, ["участник", "участника", "участников"])}`;
+
 // 1 общий друг, 3 общих друга, 12 общих друзей
 export const mutualFriendsLabel = (count) =>
   `${count} ${plural(count, ["общий друг", "общих друга", "общих друзей"])}`;
